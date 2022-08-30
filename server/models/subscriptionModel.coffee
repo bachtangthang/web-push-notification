@@ -67,7 +67,7 @@ class SubscriptionModel
         return result.rows[0]
       , (err, rs) ->
         if err?
-          console.log "err: ",
+          console.log "err: ", err
           callback err, null
         else
           console.log rs
@@ -76,5 +76,25 @@ class SubscriptionModel
       console.log err
       return callback err, null
 
+  deleteSubscription: (endpoint, callback) =>
+    try
+      console.log "endpoint: ", endpoint
+      query = "delete from #{@table} where endpoint = $1"
+      args = []
+      args.push endpoint
+      fibrous.run () =>
+        result = @client.sync.query query, args
+        return result
+      , (err, rs) ->
+        if err?
+          console.log "err: ", err
+          callback err, null
+        else
+          console.log rs
+          callback null, rs
+
+    catch err
+      console.log err
+      return callback err, null
 
 module.exports =  SubscriptionModel : SubscriptionModel

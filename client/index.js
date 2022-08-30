@@ -66,7 +66,7 @@ window.unsubscribe = async () => {
   const registration = await navigator.serviceWorker.ready;
   const subscription = await registration.pushManager.getSubscription();
   if (!subscription) return;
-
+  
   const { endpoint } = subscription;
   const response = await fetch(`/subscription?endpoint=${endpoint}`, {
     method: 'DELETE',

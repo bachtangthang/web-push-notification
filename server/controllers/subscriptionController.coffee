@@ -69,7 +69,27 @@ sendLastest = (req, res) ->
       message: err.messages
     res.status(500).json data
 
+unSubscribe = (req, res) ->
+  try
+    endpoint = req.query.endpoint?.toString()
+    if !endpoint then res.sendStatus(400)
+    fibrous.run () ->
+      result = subscriptionModel.sync.deleteSubscription endpoint
+      return result
+    , (err, rs) ->
+      if err?
+        console.log "error: ", err
+      else
+        console.log "rs: ", rs
+        res.status(200).json({})
+  catch err
+    data  =
+      success: false
+      message: err.messages
+    res.status(500).json data
+
 module.exports =
   post: post
   sendByUserId: sendByUserId
   sendLastest: sendLastest
+  unSubscribe: unSubscribe
